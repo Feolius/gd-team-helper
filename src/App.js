@@ -1,7 +1,7 @@
 /* global gapi chrome */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {Component} from 'react';
-import SearchInput from './components/SearchInput.js';
+import MainLayout from './components/MainLayout.js';
 
 class App extends Component {
     constructor(props) {
@@ -48,7 +48,7 @@ class App extends Component {
                 <span className="glyphicon glyphicon-refresh spinner"></span>
             </div>;
         if (this.state.token) {
-          app = <SearchInput/>;
+          app = <MainLayout/>;
         }
         return app;
     }
