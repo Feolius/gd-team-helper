@@ -5,9 +5,12 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "jquery": "^3.3.1",
+    "mobx": "^5.9.0",
+    "mobx-react": "^5.4.3",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "react-scripts": "2.1.3"
+    "react-scripts": "2.1.3",
+    "singleton": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
