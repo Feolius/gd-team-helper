@@ -1,7 +1,7 @@
 import React from 'react';
-import SearchInput from './SearchInput.js';
-import OwnerActionButtons from './OwnerActionButtons.js'
-import FilesGrid from './FilesGrid.js';
+import SearchInput from 'components/SearchInput.js';
+import OwnerActionButtons from 'components/OwnerActionButtons.js'
+import FilesGrid from 'components/FilesGrid.js';
 
 const FILES = [{
     "id": "1rrY67pjg8hoJaSmEZ35ey7bOpvhMtMd64-MDkFpt__g",

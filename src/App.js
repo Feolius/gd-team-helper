@@ -1,9 +1,9 @@
 /* global gapi chrome */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {Component} from 'react';
-import MainLayout from './components/MainLayout.js';
+import MainLayout from 'components/MainLayout.js';
 import {observer} from 'mobx-react';
-import authStore from './stores/Auth.js';
+import authStore from 'stores/Auth.js';
 
 class App extends Component {
     render() {

@@ -1,51 +1,62 @@
 import React from 'react';
 import {observer} from 'mobx-react';
-import filesStore from '../stores/Files.js';
+import filesStore from 'stores/Files.js';
 
-function FilesGrid(props) {
-    const headerRow = (
-        <div className="row files-grid-header">
-            <div className="col-xs-1">
-                <input id="select-all" type="checkbox" disabled/>
+class FilesGrid extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+
+    handleFileClick(fileId, e) {
+        console.log(fileId);
+        console.log(e.target.checked);
+    }
+
+    render() {
+        const headerRow = (
+            <div className="row files-grid-header">
+                <div className="col-xs-1">
+                    <input id="select-all" type="checkbox" disabled/>
+                </div>
+                <div className="col-xs-5">Name</div>
+                <div className="col-xs-3">Owner</div>
+                <div className="col-xs-3">Changed</div>
             </div>
-            <div className="col-xs-5">Name</div>
-            <div className="col-xs-3">Owner</div>
-            <div className="col-xs-3">Changed</div>
-        </div>
-    );
+        );
 
-    let filesContainer = (
-        <div className="files-container">
-            <div className="loader-screen">
-                <span className="glyphicon glyphicon-refresh spinner"></span>
-            </div>;
-        </div>
-    );
-    if (!filesStore.processingRequest) {
-        const fileRows = [];
-        if (filesStore.files.length > 0) {
-            for (let file of filesStore.files) {
-                fileRows.push((<div key={file.id} className="row file-row">
-                    <div className="col-xs-1"><img src={file.iconLink}/></div>
-                    <div className="col-xs-5 file-name">{file.name}</div>
-                    <div className="col-xs-3">{file.owners[0].displayName}</div>
-                    <div className="col-xs-3">{file.modifiedTime}</div>
-                </div>))
-            }
-        }
-        filesContainer = (
+        let filesContainer = (
             <div className="files-container">
-                {fileRows.length > 0 ? fileRows : 'No files available'}
+                <div className="loader-screen">
+                    <span className="glyphicon glyphicon-refresh spinner"></span>
+                </div>
+            </div>
+        );
+        if (!filesStore.processingRequest) {
+            const fileRows = [];
+            if (filesStore.files.length > 0) {
+                for (const file of filesStore.filesSorted) {
+                    fileRows.push((<div key={file.id} className="row file-row">
+                        <div className="col-xs-1"><input type="checkbox" onChange={this.handleFileClick.bind(this, file.id)}/></div>
+                        <div className="col-xs-5 file-name"><img src={file.iconLink}/>{file.name}</div>
+                        <div className="col-xs-3">{file.owners[0].displayName}</div>
+                        <div className="col-xs-3">{file.modifiedTime}</div>
+                    </div>))
+                }
+            }
+            filesContainer = (
+                <div className="files-container">
+                    {fileRows.length > 0 ? fileRows : 'No files available'}
+                </div>
+            );
+        }
+
+        return (
+            <div className="files-grid">
+                {headerRow}
+                {filesContainer}
             </div>
         );
     }
-
-    return (
-        <div className="files-grid">
-            {headerRow}
-            {filesContainer}
-        </div>
-    );
 }
 
 export default observer(FilesGrid);
