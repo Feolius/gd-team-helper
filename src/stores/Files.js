@@ -11,6 +11,7 @@ class FilesStore extends singleton {
     files = [];
     currentFolderId = "";
     filesListRequest = null;
+    filesSelected = {};
 
     constructor() {
         super();
@@ -47,6 +48,24 @@ class FilesStore extends singleton {
         files.sort(compareFileNames);
         return [...folders, ...files];
     }
+
+    selectFile(fileId) {
+        this.filesSelected[fileId] = 1;
+    }
+
+    unselectFile(fileId) {
+        delete this.filesSelected[fileId];
+    }
+
+    selectAllFiles() {
+        for (const file of this.filesSorted) {
+            this.filesSelected[file.id] = 1;
+        }
+    }
+
+    unselectAllFiles() {
+        this.filesSelected = {};
+    }
 }
 
 class FilesListRequestWrapper {
@@ -81,7 +100,7 @@ class FilesListRequestWrapper {
                 'method': 'GET',
                 'path': "/drive/v3/files?",
                 'params': {
-                    'fields': 'nextPageToken, files(id, name, parents, iconLink, owners, modifiedTime, mimeType)',
+                    'fields': 'nextPageToken, files(id, name, parents, iconLink, owners, webViewLink, mimeType)',
                     'q': this.q,
                     'pageToken': this._pageToken,
                     'pageSize': FILES_LIST_REQUEST_PAGE_SIZE
@@ -109,5 +128,6 @@ export default decorate(FilesStore, {
     processingRequest: observable,
     files: observable,
     fileListRequest: observable,
+    filesSelected: observable,
     filesSorted: computed
 }).get();
