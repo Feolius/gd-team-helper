@@ -2,7 +2,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import filesStore from 'stores/Files.js';
 
-class FilesGrid extends React.Component{
+class FilesGrid extends React.Component {
     constructor(props) {
         super(props);
         this.handleAllCheckboxChange = this.handleAllCheckboxChange.bind(this);
@@ -14,8 +14,7 @@ class FilesGrid extends React.Component{
         this.allCheckboxRef.current.indeterminate = filesSelectedNumber > 0 && filesSelectedNumber !== filesStore.filesSorted.length;
     }
 
-    handleFileClick(fileId, e) {
-        console.log(fileId);
+    handleRowClick(fileId, e) {
         if (!!filesStore.filesSelected[fileId]) {
             filesStore.unselectFile(fileId);
         } else {
@@ -31,11 +30,17 @@ class FilesGrid extends React.Component{
         }
     }
 
+    handleOpenFolderClick(fileId, e) {
+        filesStore.currentFolderId = fileId;
+        e.stopPropagation();
+    }
+
     render() {
         const headerRow = (
             <div className="row files-grid-header">
                 <div className="col-xs-1">
-                    <input id="select-all" type="checkbox" ref={this.allCheckboxRef} disabled={!filesStore.files.length > 0} onChange={this.handleAllCheckboxChange}/>
+                    <input id="select-all" type="checkbox" ref={this.allCheckboxRef}
+                           disabled={!filesStore.files.length > 0} onChange={this.handleAllCheckboxChange}/>
                 </div>
                 <div className="col-xs-5">Name</div>
                 <div className="col-xs-3">Owner</div>
@@ -59,9 +64,15 @@ class FilesGrid extends React.Component{
                     if (!!filesStore.filesSelected[file.id]) {
                         fileRowClasses.push('selected');
                     }
-                    fileRows.push((<div key={file.id} className={fileRowClasses.join(' ')} onClick={this.handleFileClick.bind(this, file.id)}>
-                        <div className="col-xs-1"><input type="checkbox" checked={!!filesStore.filesSelected[file.id]}/></div>
-                        <div className="col-xs-5 file-name"><img className="file-icon" src={file.iconLink}/>{file.name}</div>
+                    fileRows.push((<div key={file.id} className={fileRowClasses.join(' ')}
+                                        onClick={this.handleRowClick.bind(this, file.id)}>
+                        <div className="col-xs-1"><input type="checkbox" checked={!!filesStore.filesSelected[file.id]}/>
+                        </div>
+                        <div className="col-xs-5 file-name">
+                            <img className="file-icon" src={file.iconLink}/>{file.name}
+                            {file.mimeType === 'application/vnd.google-apps.folder' &&
+                            <button type="button" className="btn btn-outline-primary open-folder" onClick={this.handleOpenFolderClick.bind(this, file.id)}><img src="door-icon.jpg"/></button>}
+                        </div>
                         <div className="col-xs-3">{file.owners[0].displayName}</div>
                         <div className="col-xs-3"><a href={file.webViewLink} target="_blank">Open in GD</a></div>
                     </div>));

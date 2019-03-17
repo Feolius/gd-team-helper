@@ -71,3 +71,8 @@
   margin-right: 10px;
   width: 24px;
 }
+
+.open-folder {
+  margin-left: 5px;
+  cursor: pointer;
+}

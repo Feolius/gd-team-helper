@@ -16,14 +16,20 @@ class FilesStore extends singleton {
     constructor() {
         super();
         reaction(() => authStore.authToken, (token) => {
-            this.processingRequest = true;
             this.filesListRequest = new FilesListRequestWrapper('sharedWithMe = true');
             this.filesListRequest.addFilter(file => file.parents === undefined || file.parents.length === 0);
+            this._updateFileList();
+        });
+        reaction(() => this.currentFolderId, (fileId) => {
+            this.filesListRequest = new FilesListRequestWrapper(`"${fileId}" in parents`);
             this._updateFileList();
         });
     }
 
     _updateFileList() {
+        this.processingRequest = true;
+        this.files = [];
+        this.filesSelected = {};
         this.filesListRequest.getFiles().then((files) => {
             this.files.push(...files);
             this.processingRequest = false;
@@ -110,8 +116,9 @@ class FilesListRequestWrapper {
                 this._pageToken = response.nextPageToken !== undefined ? response.nextPageToken : false;
                 let files = [];
                 if (response.files !== undefined) {
+                    files = response.files;
                     for (const filter of this._filters) {
-                        files = response.files.filter(filter)
+                        files = files.filter(filter)
                     }
                 }
                 resolve(files);
@@ -129,5 +136,6 @@ export default decorate(FilesStore, {
     files: observable,
     fileListRequest: observable,
     filesSelected: observable,
+    currentFolderId: observable,
     filesSorted: computed
 }).get();

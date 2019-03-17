@@ -70,7 +70,7 @@ class MainLayout extends React.Component{
                         </div>
                     </div>
                 </div>
-                <ErrorsContainer errors={['error1', 'error2']}/>
+                <ErrorsContainer errors={[]}/>
                 <div className="container-fluid main-container">
                     <div className="row">
                         <div className="col-xs-2 left-sidebar">
