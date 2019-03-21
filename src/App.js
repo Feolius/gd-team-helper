@@ -3,7 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {Component} from 'react';
 import MainLayout from 'components/MainLayout.js';
 import {observer} from 'mobx-react';
+import {configure} from 'mobx';
 import authStore from 'stores/Auth.js';
+
+configure({enforceActions: 'observed'});
 
 class App extends Component {
     render() {

@@ -1,7 +1,8 @@
 /* global gapi chrome */
-import {decorate, observable, reaction, computed} from 'mobx';
+import {decorate, observable, reaction, computed, action, runInAction} from 'mobx';
 import singleton from 'singleton';
 import authStore from 'stores/Auth.js';
+import filesPathStore from 'stores/FilesPath.js';
 
 const MAX_FILES_LIST_REQUESTS_IN_ROW = 10;
 const FILES_LIST_REQUEST_PAGE_SIZE = 1000;
@@ -9,28 +10,22 @@ const FILES_LIST_REQUEST_PAGE_SIZE = 1000;
 class FilesStore extends singleton {
     processingRequest = false;
     files = [];
-    _filesPath = [];
     filesListRequest = null;
     filesSelected = {};
 
     constructor() {
         super();
-        reaction(() => authStore.authToken, (token) => {
-            this.filesListRequest = new FilesListRequestWrapper('sharedWithMe = true');
+        reaction(() => authStore.authToken, () => {
+            this.filesListRequest = new FilesListRequestWrapper(filesPathStore.activeQuery);
             // It's first request. And we leave only those files which doesn't have parents, because we are going to build "root" folder.
             this.filesListRequest.addFilter(file => file.parents === undefined || file.parents.length === 0);
             this._updateFileList();
         });
-        // reaction(() => this.currentFolderId, (fileId) => {
-        //     this.filesListRequest = new FilesListRequestWrapper(`"${fileId}" in parents`);
-        //     this._updateFileList();
-        // });
-        reaction(() => this._filesPath.slice(), (filesPath) => {
-            let q = 'sharedWithMe = true';
-            if (filesPath.length > 0) {
-                q = `"${filesPath[filesPath.length - 1]}" in parents`;
+        reaction(() => filesPathStore.activeQuery, (query) => {
+            this.filesListRequest = new FilesListRequestWrapper(query);
+            if (query === filesPathStore.initialQuery) {
+                this.filesListRequest.addFilter(file => file.parents === undefined || file.parents.length === 0);
             }
-            this.filesListRequest = new FilesListRequestWrapper(q);
             this._updateFileList();
         });
     }
@@ -40,14 +35,22 @@ class FilesStore extends singleton {
         this.files = [];
         this.filesSelected = {};
         this.filesListRequest.getFiles().then((files) => {
-            this.files.push(...files);
-            this.processingRequest = false;
+            runInAction(() => {
+                this.files.push(...files);
+                this.processingRequest = false;
+            });
         }, (error) => {
             // @TODO handle errors here
         });
     }
 
-    _setCurrentFolder(fileId) {
+    openFolder(fileId) {
+        const folder = this.filesSorted.get(fileId);
+        if (folder !== undefined) {
+            filesPathStore.setActiveFolder(folder);
+        } else {
+            // @TODO error handling
+        }
 
     }
 
@@ -78,7 +81,7 @@ class FilesStore extends singleton {
     }
 
     selectAllFiles() {
-        for (const file of this.filesSorted) {
+        for (const file of this.filesSorted.values()) {
             this.filesSelected[file.id] = 1;
         }
     }
@@ -141,18 +144,14 @@ class FilesListRequestWrapper {
     }
 }
 
-class FilesPath {
-    constructor() {
-
-    }
-}
-
 export default decorate(FilesStore, {
     processingRequest: observable,
     files: observable,
-    fileListRequest: observable,
     filesSelected: observable,
-    // currentFolderId: observable,
-    _filesPath: observable,
-    filesSorted: computed
+    filesSorted: computed,
+    _updateFileList: action,
+    selectFile: action,
+    unselectFile: action,
+    selectAllFiles: action,
+    unselectAllFiles: action
 }).get();

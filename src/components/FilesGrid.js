@@ -31,7 +31,7 @@ class FilesGrid extends React.Component {
     }
 
     handleOpenFolderClick(fileId, e) {
-        filesStore.filesPath.push(fileId);
+        filesStore.openFolder(fileId);
         e.stopPropagation();
     }
 

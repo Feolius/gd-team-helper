@@ -1,5 +1,5 @@
 /* global gapi chrome */
-import {decorate, observable} from 'mobx';
+import {decorate, observable, action} from 'mobx';
 import singleton from 'singleton';
 
 class AuthStore extends singleton {
@@ -12,7 +12,7 @@ class AuthStore extends singleton {
             gapi.load('client', {
                 callback: () => {
                     gapi.client.setToken({access_token: token});
-                    this.authToken = token;
+                    this.setToken(token);
                 },
                 onerror: () => {
                     // @TODO handle error here properly
@@ -26,9 +26,14 @@ class AuthStore extends singleton {
             });
         });
     }
+
+    setToken(token) {
+        this.authToken = token;
+    }
 }
 
 export default decorate(AuthStore, {
-    authToken: observable
+    authToken: observable,
+    setToken: action
 }).get();
 
