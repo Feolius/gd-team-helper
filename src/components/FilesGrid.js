@@ -11,7 +11,7 @@ class FilesGrid extends React.Component {
 
     componentDidUpdate() {
         const filesSelectedNumber = Object.entries(filesStore.filesSelected).length;
-        this.allCheckboxRef.current.indeterminate = filesSelectedNumber > 0 && filesSelectedNumber !== filesStore.filesSorted.length;
+        this.allCheckboxRef.current.indeterminate = filesSelectedNumber > 0 && filesSelectedNumber !== filesStore.filesSorted.size;
     }
 
     handleRowClick(fileId, e) {
@@ -31,7 +31,7 @@ class FilesGrid extends React.Component {
     }
 
     handleOpenFolderClick(fileId, e) {
-        filesStore.currentFolderId = fileId;
+        filesStore.filesPath.push(fileId);
         e.stopPropagation();
     }
 
@@ -59,7 +59,7 @@ class FilesGrid extends React.Component {
             const fileRows = [];
             if (filesStore.files.length > 0) {
                 let fileRowClasses;
-                for (const file of filesStore.filesSorted) {
+                for (const file of filesStore.filesSorted.values()) {
                     fileRowClasses = ['row', 'file-row'];
                     if (!!filesStore.filesSelected[file.id]) {
                         fileRowClasses.push('selected');
@@ -71,10 +71,12 @@ class FilesGrid extends React.Component {
                         <div className="col-xs-5 file-name">
                             <img className="file-icon" src={file.iconLink}/>{file.name}
                             {file.mimeType === 'application/vnd.google-apps.folder' &&
-                            <button type="button" className="btn btn-outline-primary open-folder" onClick={this.handleOpenFolderClick.bind(this, file.id)}><img src="door-icon.jpg"/></button>}
+                            <button type="button" className="btn btn-outline-primary open-folder" onClick={this.handleOpenFolderClick.bind(this, file.id)}>
+                                <img alt="Go inside" src="door-icon.jpg"/>
+                            </button>}
                         </div>
                         <div className="col-xs-3">{file.owners[0].displayName}</div>
-                        <div className="col-xs-3"><a href={file.webViewLink} target="_blank">Open in GD</a></div>
+                        <div className="col-xs-3"><a href={file.webViewLink} rel="noopener noreferrer" target="_blank">Open in GD</a></div>
                     </div>));
                 }
             }

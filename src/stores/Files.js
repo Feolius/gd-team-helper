@@ -1,5 +1,5 @@
 /* global gapi chrome */
-import {decorate, observable, reaction, extendObservable, computed} from 'mobx';
+import {decorate, observable, reaction, computed} from 'mobx';
 import singleton from 'singleton';
 import authStore from 'stores/Auth.js';
 
@@ -9,7 +9,7 @@ const FILES_LIST_REQUEST_PAGE_SIZE = 1000;
 class FilesStore extends singleton {
     processingRequest = false;
     files = [];
-    currentFolderId = "";
+    _filesPath = [];
     filesListRequest = null;
     filesSelected = {};
 
@@ -17,11 +17,20 @@ class FilesStore extends singleton {
         super();
         reaction(() => authStore.authToken, (token) => {
             this.filesListRequest = new FilesListRequestWrapper('sharedWithMe = true');
+            // It's first request. And we leave only those files which doesn't have parents, because we are going to build "root" folder.
             this.filesListRequest.addFilter(file => file.parents === undefined || file.parents.length === 0);
             this._updateFileList();
         });
-        reaction(() => this.currentFolderId, (fileId) => {
-            this.filesListRequest = new FilesListRequestWrapper(`"${fileId}" in parents`);
+        // reaction(() => this.currentFolderId, (fileId) => {
+        //     this.filesListRequest = new FilesListRequestWrapper(`"${fileId}" in parents`);
+        //     this._updateFileList();
+        // });
+        reaction(() => this._filesPath.slice(), (filesPath) => {
+            let q = 'sharedWithMe = true';
+            if (filesPath.length > 0) {
+                q = `"${filesPath[filesPath.length - 1]}" in parents`;
+            }
+            this.filesListRequest = new FilesListRequestWrapper(q);
             this._updateFileList();
         });
     }
@@ -38,6 +47,10 @@ class FilesStore extends singleton {
         });
     }
 
+    _setCurrentFolder(fileId) {
+
+    }
+
     get filesSorted() {
         let folders = this.files.filter(file => file.mimeType === 'application/vnd.google-apps.folder');
         let files = this.files.filter(file => file.mimeType !== 'application/vnd.google-apps.folder');
@@ -52,7 +65,8 @@ class FilesStore extends singleton {
         };
         folders.sort(compareFileNames);
         files.sort(compareFileNames);
-        return [...folders, ...files];
+        // We need map here because we should be able to find file by file id.
+        return new Map([...folders, ...files].map((file) => [file.id, file]));
     }
 
     selectFile(fileId) {
@@ -80,12 +94,6 @@ class FilesListRequestWrapper {
 
     constructor(q) {
         this.q = q;
-        extendObservable(this, {
-            _pageToken: this._pageToken,
-            get pageToken() {
-                return this._pageToken;
-            }
-        })
     }
 
     async getFiles() {
@@ -120,6 +128,8 @@ class FilesListRequestWrapper {
                     for (const filter of this._filters) {
                         files = files.filter(filter)
                     }
+                } else {
+                    // @TODO handle error?
                 }
                 resolve(files);
             });
@@ -131,11 +141,18 @@ class FilesListRequestWrapper {
     }
 }
 
+class FilesPath {
+    constructor() {
+
+    }
+}
+
 export default decorate(FilesStore, {
     processingRequest: observable,
     files: observable,
     fileListRequest: observable,
     filesSelected: observable,
-    currentFolderId: observable,
+    // currentFolderId: observable,
+    _filesPath: observable,
     filesSorted: computed
 }).get();
