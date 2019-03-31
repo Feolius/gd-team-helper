@@ -1,6 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import filesPathStore from 'stores/FilesPath.js';
+import {Button} from "react-bootstrap";
 
 class FilesPath extends React.Component{
 
@@ -13,26 +14,19 @@ class FilesPath extends React.Component{
     }
 
     render() {
-        const pathButtons = [<button type="button"
-                                     className="btn btn-default path-element"
+        const pathButtons = [<Button variant={filesPathStore.filesPath.length > 0 ? 'default' : 'primary'}
+                                     key="root"
+                                     className="path-element"
                                      onClick={this.handleRootBtnClick.bind(this)}>
-            {filesPathStore.name}</button>];
+            {filesPathStore.name}</Button>];
         let i = 0;
         for (const file of filesPathStore.filesPath) {
             pathButtons.push(<span className="path-delimiter">/</span>);
-            const classes = ['btn', 'path-element'];
-            let disabled = '';
-            if (i === filesPathStore.filesPath.length - 1) {
-                classes.push('btn-primary');
-                disabled = 'disabled';
-            } else {
-                classes.push('btn-default');
-            }
-            pathButtons.push(<button type="button"
-                                     className={classes.join(' ')}
-                                     disabled={disabled}
+            pathButtons.push(<Button variant={i === filesPathStore.filesPath.length - 1 ? 'primary' : 'default'}
+                                     key={file.id}
+                                     className="path-element"
                                      onClick={this.handlePathBtnClick.bind(this, file)}>
-                {file.name}</button>);
+                {file.name}</Button>);
             i++;
         }
         return (

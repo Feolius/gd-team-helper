@@ -14,22 +14,32 @@ class FilesPath extends singleton {
     }
 
     setActiveFolder(file) {
-        // @TODO add check that this is folder and that something was done with actual path. Otherwise throw error.
+        // @TODO add check that this is a folder and that something was done with actual path. Otherwise throw error.
+        if (file.mimeType !== 'application/vnd.google-apps.folder') {
+            throw new Error('Attempt to add non folder file in path');
+        }
+        let activeFolderChanged = false;
         if (this.filesPath.length === 0) {
             // If files path is empty then we cannot check anything, just add it.
             this.filesPath.push(file);
+            activeFolderChanged = true;
         } else {
-            // It's a case when we switch back to existing in path folder.
+            // It's a case when we switch back to existing folder in path.
             const filePathFolderIndex = this.filesPath.indexOf(file);
             if (filePathFolderIndex !== -1) {
                 this.filesPath.splice(filePathFolderIndex + 1, this.filesPath.length - 1 - filePathFolderIndex);
+                activeFolderChanged = true;
             } else {
                 // It's a case that current file is a child of last path folder.
                 const lastFolder = this.filesPath[this.filesPath.length - 1];
                 if (file.parents.indexOf(lastFolder.id) !== -1) {
                     this.filesPath.push(file);
+                    activeFolderChanged = true;
                 }
             }
+        }
+        if (!activeFolderChanged) {
+            throw new Error('Active folder was not changed');
         }
     }
 

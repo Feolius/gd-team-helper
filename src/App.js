@@ -5,6 +5,7 @@ import MainLayout from 'components/MainLayout.js';
 import {observer} from 'mobx-react';
 import {configure} from 'mobx';
 import authStore from 'stores/Auth.js';
+import {Spinner} from "react-bootstrap";
 
 configure({enforceActions: 'observed'});
 
@@ -12,7 +13,7 @@ class App extends Component {
     render() {
         let app =
             <div className="loader-screen">
-                <span className="glyphicon glyphicon-refresh spinner"></span>
+                <Spinner animation="border" variant="primary" />
             </div>;
         if (authStore.authToken) {
           app = <MainLayout/>;

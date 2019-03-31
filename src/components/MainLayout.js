@@ -1,8 +1,9 @@
 import React from 'react';
 import SearchInput from 'components/SearchInput.js';
 import FilePath from 'components/FilesPath';
-import OwnerActionButtons from 'components/OwnerActionButtons.js'
+import Operations from 'components/Operations'
 import FilesGrid from 'components/FilesGrid.js';
+import {Container, Row, Col} from "react-bootstrap";
 
 class MainLayout extends React.Component{
     constructor(props) {
@@ -22,27 +23,27 @@ class MainLayout extends React.Component{
         return (
             <React.Fragment>
                 <div className="container search-bar-container">
-                    <div className="row">
-                        <div className="col-xs-6">
+                    <Row>
+                        <Col xs={6}>
                             <SearchInput handleSearch={this.handleSearch}/>
-                        </div>
-                    </div>
+                        </Col>
+                    </Row>
                 </div>
                 <ErrorsContainer errors={[]}/>
-                <div className="container-fluid main-container">
-                    <div className="row">
-                        <div className="col-xs-2 left-sidebar">
-                            <OwnerActionButtons/>
-                        </div>
-                        <div className="col-xs-8 content">
+                <Container fluid={true} className="main-container">
+                    <Row>
+                        <Col xs={2} className="col-xs-2 left-sidebar">
+                            <Operations/>
+                        </Col>
+                        <Col xs={8} className="content">
                             <FilePath/>
                             <FilesGrid/>
-                        </div>
-                        <div className="col-xs-2 left-sidebar">
+                        </Col>
+                        <Col xs={2} className="left-sidebar">
                             sidebar right
-                        </div>
-                    </div>
-                </div>
+                        </Col>
+                    </Row>
+                </Container>
             </React.Fragment>
         );
     }

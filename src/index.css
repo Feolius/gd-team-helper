@@ -45,18 +45,6 @@
   font-weight: bold;
 }
 
-.spinner {
-  color: #337ab7;
-  font-size: 200%;
-  /*-animation: spin 2s infinite linear;*/
-  -webkit-animation: spin 1.5s infinite linear;
-}
-
-@-webkit-keyframes spin {
-  from { -webkit-transform: rotate(0deg);}
-  to { -webkit-transform: rotate(360deg);}
-}
-
 .loader-screen {
   position: fixed;
   top: 50%;
@@ -79,4 +67,20 @@
 
 .path-delimiter {
   margin: 0 10px;
+}
+
+.operation-buttons-wrapper {
+  border: 1px solid silver;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.row.operation-buttons-wrapper {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.operation-buttons-wrapper h4 {
+  text-align: center;
 }
