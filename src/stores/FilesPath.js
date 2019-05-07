@@ -9,10 +9,6 @@ class FilesPath extends singleton {
     rootQuery = this.initialQuery;
     name = 'root';
 
-    constructor() {
-        super();
-    }
-
     setActiveFolder(file) {
         // @TODO add check that this is a folder and that something was done with actual path. Otherwise throw error.
         if (file.mimeType !== 'application/vnd.google-apps.folder') {
@@ -64,6 +60,14 @@ class FilesPath extends singleton {
     get initialQuery() {
         return INITIAL_QUERY;
     }
+
+    get currentFolder() {
+        let currentFolder = null;
+        if (this.filesPath.length > 0) {
+            currentFolder = this.filesPath[this.filesPath.length - 1];
+        }
+        return currentFolder;
+    }
 }
 
 export default decorate(FilesPath, {
@@ -72,5 +76,6 @@ export default decorate(FilesPath, {
     activeQuery: computed,
     setActiveFolder: action,
     setRootQuery: action,
-    resetToRoot: action
+    resetToRoot: action,
+    currentFolder: computed
 }).get();

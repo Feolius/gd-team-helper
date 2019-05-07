@@ -84,3 +84,12 @@
 .operation-buttons-wrapper h4 {
   text-align: center;
 }
+
+.preparing-to-copy-modal-body {
+  display: flex;
+  align-items: center;
+}
+
+.preparing-to-copy-modal-body span {
+  margin-left: 10px;
+}
