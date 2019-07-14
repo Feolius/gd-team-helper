@@ -1,4 +1,3 @@
-/* global gapi chrome */
 import {decorate, observable, reaction, computed, action, runInAction} from 'mobx';
 import singleton from 'singleton';
 import files from 'stores/Files.js';
@@ -37,7 +36,7 @@ class CopyOperationStore extends singleton {
             }, (error) => {
                 runInAction(() => {
                     this.buildingTree = false;
-                    this.filesTree = null;
+                    this.resetTree();
                     if (error !== 'aborted') {
                         //@TODO need better error logging here
                         console.log(error);

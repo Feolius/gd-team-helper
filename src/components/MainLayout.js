@@ -13,25 +13,22 @@ function MainLayout(){
 
     return (
         <React.Fragment>
-            <div className="container search-bar-container">
-                <Row>
-                    <Col xs={6}>
-                        <SearchInput handleSearch={handleSearch}/>
-                    </Col>
-                </Row>
-            </div>
+            {/*<div className="container search-bar-container">*/}
+            {/*    <Row>*/}
+            {/*        <Col xs={6}>*/}
+            {/*            <SearchInput handleSearch={handleSearch}/>*/}
+            {/*        </Col>*/}
+            {/*    </Row>*/}
+            {/*</div>*/}
             <ErrorsContainer errors={[]}/>
             <Container fluid={true} className="main-container">
-                <Row>
+                <Row className="main-row">
                     <Col xs={2} className="col-xs-2 left-sidebar">
                         <Operations/>
                     </Col>
-                    <Col xs={8} className="content">
+                    <Col xs={10} className="content">
                         <FilePath/>
                         <FilesGrid/>
-                    </Col>
-                    <Col xs={2} className="left-sidebar">
-                        sidebar right
                     </Col>
                 </Row>
             </Container>

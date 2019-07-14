@@ -1,14 +1,14 @@
 import React from 'react';
-import CopyOperation from 'components/operations/CopyOperation.js'
-import RemoveOperation from 'components/operations/RemoveOperation.js';
+import FilterByOwner from 'components/operations/FilterByOwner.js';
+import MakeMeOwner from "components/operations/MakeMeOwner.js";
 
 export default function Operations(props){
     return (
         <div className="operations-wrapper">
             <h3>Operations available:</h3>
             <div className="operations-buttons-wrapper">
-                <CopyOperation/>
-                <RemoveOperation/>
+                <FilterByOwner/>
+                <MakeMeOwner/>
             </div>
         </div>
 

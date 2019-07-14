@@ -1,13 +1,26 @@
 /* global gapi chrome */
 import {decorate, observable, reaction, computed, action, runInAction} from 'mobx';
 import singleton from 'singleton';
+import filterByOwnerStore from "stores/FilterByOwner.js";
 
 const INITIAL_QUERY = 'sharedWithMe = true';
 
+// @TODO this class should be split onto two separate classes to handle queries and paths.
 class FilesPath extends singleton {
     filesPath = [];
     rootQuery = this.initialQuery;
     name = 'root';
+
+    constructor() {
+        super();
+        reaction(() => filterByOwnerStore.ownerValue, (ownerValue) => {
+            if (ownerValue !== '') {
+                this.setRootQuery(`"${ownerValue}" in owners`);
+            } else {
+                this.setRootQuery(this.initialQuery);
+            }
+        });
+    }
 
     setActiveFolder(file) {
         // @TODO add check that this is a folder and that something was done with actual path. Otherwise throw error.
