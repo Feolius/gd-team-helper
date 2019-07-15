@@ -1,6 +1,5 @@
 import gapiRequestsPool from "lib/GapiRequestsPool";
 
-const MAX_FILES_LIST_REQUESTS_IN_ROW = 10;
 const FILES_LIST_REQUEST_PAGE_SIZE = 1000;
 
 export default class FilesListRequestWrapper {
@@ -15,7 +14,7 @@ export default class FilesListRequestWrapper {
         const files = [];
         let filesPart = [];
         let i = 0;
-        while (this._pageToken !== false && i < MAX_FILES_LIST_REQUESTS_IN_ROW) {
+        while (this._pageToken !== false) {
             filesPart = await this._makeRequest();
             files.push(...filesPart);
             i++;
