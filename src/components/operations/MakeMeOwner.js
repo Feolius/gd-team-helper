@@ -14,7 +14,7 @@ export default observer(() => {
             </div>
             <Button
                 disabled={Object.entries(filesStore.filesSelected).length === 0}
-                onClick={() => {makeMeOwnerStore.testBuildTree()}}
+                onClick={() => {makeMeOwnerStore.testCopySingleFolder()}}
             >Make me Owner</Button>
             <Modal show={makeMeOwnerStore.processing} backdrop="static">
                 <Modal.Header>

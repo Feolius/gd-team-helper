@@ -29,7 +29,7 @@ class AuthStore extends singleton {
 
         gapi.load('client', {
             callback: () => {
-                gapi.client.setToken({access_token: 'ya29.Gl1GB5JWe67oCWtiT4y2pcxEwUvHD5UMUrRES2l0uh4CvL_Nq8IUWiHVOYFo6UdiRHnBIe3hqZVnX3A1DEThZ60okwVut1FM4p6GqZnZZRxypWjpUpUE4qL52gAE5B4'});
+                gapi.client.setToken({access_token: 'ya29.Gl1JB8hAUDmEypUfnQhMXPk0lGgweKkvKU9Y3Zd_thRCmcH4vn2Y5G1CK6IIL12NhT6Q2JuE8eOKQm7gHlq79NfURU_1YPeqjj2y7toE4iOD9aaTxsYdMSB6Tv8XnEE'});
                 this.setToken('ya29.Gl3dBtGUkm7DWQFNRO4yABz1KRDV8jdho-HXA66fvT8sLEaZ5K2foMmGaPOUD0P3cXfWiUCcEFYjIYGaK154ngKT3uYCpiYvfKumd8YS0rVzlaNly5d9krUmzIXoKac');
             },
             onerror: () => {

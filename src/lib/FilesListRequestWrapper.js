@@ -28,7 +28,7 @@ export default class FilesListRequestWrapper {
                 'method': 'GET',
                 'path': "/drive/v3/files?",
                 'params': {
-                    'fields': 'nextPageToken, files(id, name, parents, iconLink, owners, webViewLink, mimeType)',
+                    'fields': 'nextPageToken, files(id, name, parents, iconLink, owners, webViewLink, mimeType, permissions)',
                     'q': this.q,
                     'pageToken': this._pageToken,
                     'pageSize': FILES_LIST_REQUEST_PAGE_SIZE
